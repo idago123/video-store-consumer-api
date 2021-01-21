@@ -22,6 +22,7 @@ class VideosController < ApplicationController
   end
 
   def create
+    
     video = Video.new(video_params.merge({inventory: 5}))
     if video.save
       render json: video.as_json(only: 
