@@ -21,7 +21,26 @@ class VideosController < ApplicationController
       )
   end
 
+  def create
+    video = Video.new(video_params.merge({inventory: 5}))
+    if video.save
+      render json: video.as_json(only: 
+      [:id, :title, :overview, :release_date, :image_url, :external_id, :inventory]),
+      status: :created
+    else
+      render json: {
+          errors: video.errors.messages
+      }, status: :bad_request
+      return
+    end
+  end
+  
+
   private
+
+  def video_params
+    return params.permit(:external_id, :title, :release_date, :image_url, :overview)
+  end
 
   def require_video
     @video = Video.find_by(title: params[:title])
